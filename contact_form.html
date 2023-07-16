@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact Form</title>
+</head>
+<body>
+  <h2>Contact Form</h2>
+  <form id="contactForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="message">Message:</label><br>
+    <textarea id="message" name="message" rows="4" cols="50" required></textarea><br>
+
+    <input type="submit" value="Submit">
+  </form>
+  
+  <!-- Include the JavaScript code here -->
+  <script src="script.js">
+    // Function to handle form submission
+function handleFormSubmit(event) {
+  event.preventDefault(); // Prevent form submission and page reload
+
+  // Collect form data
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const message = document.getElementById('message').value;
+
+  // Create an object to hold the form data
+  const formData = {
+    name: name,
+    email: email,
+    message: message
+  };
+
+  // Send form data to the Google Apps Script web app
+  fetch('https://script.google.com/macros/s/AKfycbwFWL3gS_XvnpHUKPJNMEGCdxvprvOMyYRHk1Rg7Z30ezIHEqxJec78OuJNmuXRyY5J/exec', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams(formData)
+  })
+  .then(response => {
+    if (response.ok) {
+      alert('Form submitted successfully!');
+      // Optionally, you can clear the form after successful submission
+      document.getElementById('contactForm').reset();
+    } else {
+      alert('Form submission failed.');
+    }
+  })
+  .catch(error => {
+    alert('An error occurred during form submission.');
+    console.error(error);
+  });
+}
+
+// Attach the form submission event listener
+document.getElementById('contactForm').addEventListener('submit', handleFormSubmit);
+
+  </script>
+</body>
+</html>
