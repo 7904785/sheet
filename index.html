@@ -5,7 +5,8 @@
 </head>
 <body>
   <h2>Contact Form</h2>
-  <form id="contactForm">
+  <h1 id="msg"></h1>
+  <form id="contactForm" action="https://script.google.com/macros/s/AKfycbySkziCPRp9QdGuA3ndEBRA7Cfz3Qj2KNRSxvZdhlkjHsgrh_A3SgYr3pY_TPQCzISJ/exec" method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required><br>
 
@@ -15,53 +16,38 @@
     <label for="message">Message:</label><br>
     <textarea id="message" name="message" rows="4" cols="50" required></textarea><br>
 
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit" id="sub">
   </form>
-  
-  <!-- Include the JavaScript code here -->
-  <script src="script.js">
-    // Function to handle form submission
-function handleFormSubmit(event) {
-  event.preventDefault(); // Prevent form submission and page reload
+                 
+    <script>
+        let form = document.querySelector("form");
+        // The document.querySelector() method returns the first element that matches a specified CSS selector.
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // The preventDefault() method stops the form from submitting and prevents the page from refreshing.
+            document.querySelector("#sub").value = "Submiting..";
+            // Change the value of the submit button to "Submitting..." while the form is being submitted.
+            let data = new FormData(form);
+            // The FormData() method creates a new FormData object that contains the values of all the form fields.
+            fetch('https://script.google.com/macros/s/AKfycbySkziCPRp9QdGuA3ndEBRA7Cfz3Qj2KNRSxvZdhlkjHsgrh_A3SgYr3pY_TPQCzISJ/exec', {
+                    method: "POST",
+                    body: data
+                })
+                // The fetch() method is used to make a request to the server and retrieve data.
+                // This is an example API endpoint. Replace it with the actual URL for the API endpoint you want to use.
+                .then(res => res.text())
+                // The .then() method is used to handle the response from the server.
+                // The response is converted to text using the res.text() method.
+                .then(data => {
+                    document.querySelector("#msg").innerHTML = data;
+                    // The innerHTML property sets or returns the HTML content of an element.
+                    // Here, we are setting the content of the <h1> element to the response from the server.
+                    document.querySelector("#sub").value = "Submit"
+                    // Change the value of the submit button back to "Submit" after the form has been submitted.
+                });
+        })
+    </script>
 
-  // Collect form data
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const message = document.getElementById('message').value;
-
-  // Create an object to hold the form data
-  const formData = {
-    name: name,
-    email: email,
-    message: message
-  };
-
-  // Send form data to the Google Apps Script web app
-  fetch('https://script.google.com/macros/s/AKfycbwFWL3gS_XvnpHUKPJNMEGCdxvprvOMyYRHk1Rg7Z30ezIHEqxJec78OuJNmuXRyY5J/exec', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams(formData)
-  })
-  .then(response => {
-    if (response.ok) {
-      alert('Form submitted successfully!');
-      // Optionally, you can clear the form after successful submission
-      document.getElementById('contactForm').reset();
-    } else {
-      alert('Form submission failed.');
-    }
-  })
-  .catch(error => {
-    alert('An error occurred during form submission.');
-    console.error(error);
-  });
-}
-
-// Attach the form submission event listener
-document.getElementById('contactForm').addEventListener('submit', handleFormSubmit);
-
-  </script>
+            
 </body>
 </html>
